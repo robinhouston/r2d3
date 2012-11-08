@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Selecting by class</title>
+    <script type="text/javascript" src="../lib/sizzle/sizzle.js"></script>
+    <!--[if lte IE 8]>
+    <script type="text/javascript" src="../lib/compat/compat.js"></script>
+    <![endif]-->
+    <script src="../r2d3.v2.js"></script>
+  </head>
+  <body>
+    <div id="main"></div>
+    <script>
+      var WIDTH=800, HEIGHT=400, RADIUS=30; // Global constants
+      
+      var svg = d3.select('#main').append('svg')
+                  .attr('height', HEIGHT).attr('width', WIDTH);
+      
+      var colors = ["red", "green", "blue"];
+
+      function updateCircles(data) {
+        var circles = svg.selectAll('.circle').data(data);
+        circles.enter()
+            .append('circle')
+              .attr('class', 'circle')
+              .attr('fill', function(xy, i) { return colors[i % colors.length]; })
+              .attr('cx', function(xy) { return xy[0]; })
+              .attr('cy', function(xy) { return xy[1]; })
+              .attr('r', RADIUS);
+        circles.transition()
+          .attr('cx', function(xy) { return xy[0]; })
+          .attr('cy', function(xy) { return xy[1]; })
+      }
+      
+      function randomPosition() {
+        return [
+          Math.random() * (WIDTH - 2*RADIUS) + RADIUS,
+          Math.random() * (HEIGHT - 2*RADIUS) + RADIUS
+        ];
+      }
+
+      setInterval(function() {
+        // Every second, move our three circles to new random positions
+        updateCircles([randomPosition(), randomPosition(), randomPosition()]);
+      }, 1000);
+      
+    </script>
+  </body>
+</html>
